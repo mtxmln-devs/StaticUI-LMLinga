@@ -1,0 +1,84 @@
+<!-- ============================================================
+     SIDEBAR COMPONENT
+     Include this in every system page
+     ============================================================ -->
+<aside class="sidebar" id="sidebar">
+
+  <!-- Logo -->
+  <div class="sidebar-logo">
+    <img src="img/logo.png" alt="LMLinga Logo" onerror="this.style.display='none'">
+
+    <div class="sidebar-logo-text">
+      <span class="brand">LMLinga</span>
+      <span class="sub">Barangay Health System</span>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="sidebar-nav">
+
+    <!-- Main Menu -->
+    <div class="nav-label">Main Menu</div>
+
+    <a href="dashboard.html" class="nav-item" data-page="dashboard">
+      <span class="nav-icon">🏠</span>
+      Dashboard
+    </a>
+
+    <a href="spot-mapping.html" class="nav-item" data-page="spot-mapping">
+      <span class="nav-icon">🗺️</span>
+      Spot Mapping
+    </a>
+
+    <a href="profiling.html" class="nav-item" data-page="profiling">
+      <span class="nav-icon">🏡</span>
+      Household Profiling
+    </a>
+
+    <!-- Health Records with submenu -->
+    <div class="nav-label">Health Records</div>
+
+    <div class="nav-item" id="health-toggle" onclick="toggleSubmenu()">
+      <span class="nav-icon">🩺</span>
+      Health Records
+      <span class="nav-toggle" id="health-arrow">▾</span>
+    </div>
+
+    <div class="nav-submenu" id="health-submenu">
+      <a href="health-records.html?tab=immunization" class="nav-item" data-page="immunization">
+        <span class="nav-icon">💉</span> Immunization
+      </a>
+      <a href="health-records.html?tab=timbang" class="nav-item" data-page="timbang">
+        <span class="nav-icon">⚖️</span> Operation Timbang
+      </a>
+      <a href="health-records.html?tab=vitamina" class="nav-item" data-page="vitamina">
+        <span class="nav-icon">💊</span> Vitamin A
+      </a>
+      <a href="health-records.html?tab=deworming" class="nav-item" data-page="deworming">
+        <span class="nav-icon">🔬</span> Deworming
+      </a>
+      <a href="health-records.html?tab=risk" class="nav-item" data-page="risk">
+        <span class="nav-icon">⚠️</span> Risk Assessment
+      </a>
+      <a href="health-records.html?tab=family" class="nav-item" data-page="family">
+        <span class="nav-icon">👨‍👩‍👧</span> Family Planning
+      </a>
+      <a href="health-records.html?tab=maternal" class="nav-item" data-page="maternal">
+        <span class="nav-icon">🤱</span> Maternal Care
+      </a>
+      <a href="health-records.html?tab=death" class="nav-item" data-page="death">
+        <span class="nav-icon">📋</span> Death Records
+      </a>
+    </div>
+
+  </nav>
+
+  <!-- Sidebar Footer - Logout -->
+  <div class="sidebar-footer">
+    <button class="btn-logout" onclick="confirmLogout()">
+      <span>🚪</span>
+      Logout
+    </button>
+  </div>
+
+</aside>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard – LMLinga</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <script src="js/app.js"></script>
+  <script>
+    protectStaffPage();
+  </script>
+</head>
+<body>
+
+<div class="app-layout">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <img src="img/logo.png" alt="LMLinga" onerror="this.style.display='none'">
+      <div class="sidebar-logo-text">
+        <span class="brand">LMLinga</span>
+        <span class="sub">Health Center</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Main Menu</div>
+      <a href="dashboard.html" class="nav-item active"><span class="nav-icon">🏠</span>Dashboard</a>
+      <a href="spot-mapping.html" class="nav-item"><span class="nav-icon">🗺️</span>Spot Mapping</a>
+      <a href="profiling.html" class="nav-item"><span class="nav-icon">🏡</span>Household Profiling</a>
+      <div class="nav-label">Health Records</div>
+      <div class="nav-item" onclick="toggleSubmenu()">
+        <span class="nav-icon">🩺</span>Health Records
+        <span class="nav-toggle" id="health-arrow">▾</span>
+      </div>
+      <div class="nav-submenu" id="health-submenu">
+        <a href="health-records.html?tab=immunization" class="nav-item"><span class="nav-icon">💉</span>Immunizations</a>
+        <a href="health-records.html?tab=timbang" class="nav-item"><span class="nav-icon">⚖️</span>Operation Timbang</a>
+        <a href="health-records.html?tab=vitamina" class="nav-item"><span class="nav-icon">💊</span>Vitamin A</a>
+        <a href="health-records.html?tab=deworming" class="nav-item"><span class="nav-icon">🔬</span>Deworming</a>
+        <a href="health-records.html?tab=risk" class="nav-item"><span class="nav-icon">⚠️</span>Risk Assessment</a>
+        <a href="health-records.html?tab=family" class="nav-item"><span class="nav-icon">👨‍👩‍👧</span>Family Planning</a>
+        <a href="health-records.html?tab=maternal" class="nav-item"><span class="nav-icon">🤱</span>Maternal Care</a>
+        <a href="health-records.html?tab=death" class="nav-item"><span class="nav-icon">📋</span>Death</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button type="button" class="btn-logout" onclick="confirmLogout()"><span>🚪</span>Logout</button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="map-btn" onclick="toggleSidebar()" aria-label="Open menu">☰</button>
+        <div>
+          <div class="page-title">Dashboard</div>
+          <div class="page-subtitle" id="header-subtitle">Barangay health overview · LMLinga</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="search" name="q" placeholder="Search records..." autocomplete="off">
+        </div>
+        <div class="header-actions">
+          <button type="button" class="header-icon-btn" title="Notifications">🔔</button>
+        </div>
+        <div class="d-flex align-center gap-2">
+          <div class="user-avatar" id="user-initial">B</div>
+          <div class="user-info">
+            <div class="user-name" id="user-display-name">BHW User</div>
+            <div class="user-role" id="user-display-role">Barangay Health Worker</div>
+          </div>
+        </div>
+        <button type="button" class="header-logout" onclick="confirmLogout()">Log Out</button>
+      </div>
+    </header>
+
+    <div class="page-content dashboard-main">
+
+      <div class="stats-grid dashboard-stats-figma">
+        <div class="stat-card">
+          <div class="stat-info">
+            <div class="stat-value">635</div>
+            <div class="stat-label">Total Household</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-info">
+            <div class="stat-value">2,103</div>
+            <div class="stat-label">Total Residents</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-info">
+            <div class="stat-value">12</div>
+            <div class="stat-label">NHTS</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-info">
+            <div class="stat-value">91</div>
+            <div class="stat-label">Non NHTS</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-info">
+            <div class="stat-value">28</div>
+            <div class="stat-label">Non NHTS Poor</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-grid dashboard-grid--figma">
+        <div class="dashboard-columns">
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">🗺️ LMLinga Map · City of Calamba</div>
+              <a href="spot-mapping.html" class="btn btn-secondary btn-sm">View Full Map</a>
+            </div>
+            <div class="map-container dashboard-map-preview" role="link" tabindex="0" onclick="window.location='spot-mapping.html'" onkeydown="if(event.key==='Enter')window.location='spot-mapping.html'">
+              <div class="map-pin green"  style="top:30%;  left:25%;"></div>
+              <div class="map-pin green"  style="top:45%;  left:40%;"></div>
+              <div class="map-pin green"  style="top:20%;  left:55%;"></div>
+              <div class="map-pin yellow" style="top:60%;  left:30%;"></div>
+              <div class="map-pin yellow" style="top:35%;  left:65%;"></div>
+              <div class="map-pin red"    style="top:55%;  left:60%;"></div>
+              <div class="map-pin green"  style="top:70%;  left:50%;"></div>
+              <div class="map-pin green"  style="top:25%;  left:75%;"></div>
+              <div class="map-pin red"    style="top:65%;  left:20%;"></div>
+              <div class="map-pin green"  style="top:50%;  left:80%;"></div>
+              <div class="map-pin yellow" style="top:80%;  left:70%;"></div>
+              <div class="map-pin green"  style="top:15%;  left:35%;"></div>
+              <span class="map-placeholder-icon">🗺️</span>
+              <span class="map-placeholder-text">Interactive map · Click to open full map</span>
+            </div>
+            <div class="map-legend-row">
+              <div class="map-legend-item">
+                <span class="map-legend-dot map-legend-dot--healthy"></span> Healthy
+              </div>
+              <div class="map-legend-item">
+                <span class="map-legend-dot map-legend-dot--attention"></span> Needs Attention
+              </div>
+              <div class="map-legend-item">
+                <span class="map-legend-dot map-legend-dot--risk"></span> At Risk
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="dashboard-columns">
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📊 Health Indicators</div>
+            </div>
+            <div class="indicators-grid">
+              <div class="indicator-card"><span class="indicator-icon">👧</span><span class="indicator-label">Teenage Pregnant</span><span class="indicator-value">3</span></div>
+              <div class="indicator-card"><span class="indicator-icon">🤰</span><span class="indicator-label">Pregnant</span><span class="indicator-value">7</span></div>
+              <div class="indicator-card"><span class="indicator-icon">🤱</span><span class="indicator-label">Lactating</span><span class="indicator-value">5</span></div>
+              <div class="indicator-card"><span class="indicator-icon">💉</span><span class="indicator-label">Fully Immunized</span><span class="indicator-value">9</span></div>
+              <div class="indicator-card"><span class="indicator-icon">⚖️</span><span class="indicator-label">Underweight Children</span><span class="indicator-value">2</span></div>
+              <div class="indicator-card"><span class="indicator-icon">🍔</span><span class="indicator-label">Overweight Children</span><span class="indicator-value">4</span></div>
+              <div class="indicator-card"><span class="indicator-icon">🍼</span><span class="indicator-label">Exclusively Breastfed</span><span class="indicator-value">8</span></div>
+              <div class="indicator-card"><span class="indicator-icon">🥣</span><span class="indicator-label">Infants Complementary Food</span><span class="indicator-value">6</span></div>
+              <div class="indicator-card"><span class="indicator-icon">🚽</span><span class="indicator-label">Households with Toilet</span><span class="indicator-value">10</span></div>
+              <div class="indicator-card"><span class="indicator-icon">🏠</span><span class="indicator-label">Households with Safe Water</span><span class="indicator-value">1</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card dashboard-recent-table">
+        <div class="card-header">
+          <div class="card-title">📋 Recent household updates</div>
+          <span class="text-sm text-gray">Latest verifications &amp; edits</span>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>HH ID</th><th>Name</th><th>Date</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>HH-101</td><td>Juan Dela Cruz</td><td>May 01, 2026</td><td><span class="badge badge-green">Verified</span></td></tr>
+              <tr><td>HH-098</td><td>Maria Santos</td><td>Apr 30, 2026</td><td><span class="badge badge-green">Verified</span></td></tr>
+              <tr><td>HH-112</td><td>Pedro Reyes</td><td>Apr 29, 2026</td><td><span class="badge badge-yellow">Pending</span></td></tr>
+              <tr><td>HH-087</td><td>Ana Garcia</td><td>Apr 28, 2026</td><td><span class="badge badge-green">Verified</span></td></tr>
+              <tr><td>HH-104</td><td>Carlos Bautista</td><td>Apr 27, 2026</td><td><span class="badge badge-green">Verified</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    updateHeaderUserInfo();
+  });
+</script>
+</body>
+</html>

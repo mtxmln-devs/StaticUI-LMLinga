@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Records – LMLinga</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/app.js"></script>
+  <script>protectStaffPage();</script>
+</head>
+<body>
+
+<div class="app-layout">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <img src="img/logo.png" alt="LMLinga" onerror="this.style.display='none'">
+      <div class="sidebar-logo-text">
+        <span class="brand">LMLinga</span>
+        <span class="sub">Health Center</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Main Menu</div>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span>Dashboard</a>
+      <a href="spot-mapping.html" class="nav-item"><span class="nav-icon">🗺️</span>Spot Mapping</a>
+      <a href="profiling.html" class="nav-item"><span class="nav-icon">🏡</span>Household Profiling</a>
+      <div class="nav-label">Health Records</div>
+      <div class="nav-item" onclick="toggleSubmenu()">
+        <span class="nav-icon">🩺</span>Health Records
+        <span class="nav-toggle" id="health-arrow">▾</span>
+      </div>
+      <div class="nav-submenu open" id="health-submenu">
+        <a href="health-records.html?tab=immunization" class="nav-item" data-hr-tab="immunization"><span class="nav-icon">💉</span>Immunizations</a>
+        <a href="health-records.html?tab=timbang" class="nav-item" data-hr-tab="timbang"><span class="nav-icon">⚖️</span>Operation Timbang</a>
+        <a href="health-records.html?tab=vitamina" class="nav-item" data-hr-tab="vitamina"><span class="nav-icon">💊</span>Vitamin A</a>
+        <a href="health-records.html?tab=deworming" class="nav-item" data-hr-tab="deworming"><span class="nav-icon">🔬</span>Deworming</a>
+        <a href="health-records.html?tab=risk" class="nav-item" data-hr-tab="risk"><span class="nav-icon">⚠️</span>Risk Assessment</a>
+        <a href="health-records.html?tab=family" class="nav-item" data-hr-tab="family"><span class="nav-icon">👨‍👩‍👧</span>Family Planning</a>
+        <a href="health-records.html?tab=maternal" class="nav-item" data-hr-tab="maternal"><span class="nav-icon">🤱</span>Maternal Care</a>
+        <a href="health-records.html?tab=death" class="nav-item" data-hr-tab="death"><span class="nav-icon">📋</span>Death</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button type="button" class="btn-logout" onclick="confirmLogout()"><span>🚪</span>Logout</button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="map-btn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+        <div>
+          <div class="page-title" id="hr-page-title">Health Records</div>
+          <div class="page-subtitle" id="hr-page-sub">Central registry for barangay health programs</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="search" id="hr-global-search" placeholder="Search records..." autocomplete="off">
+        </div>
+        <div class="header-actions">
+          <button type="button" class="header-icon-btn" title="Notifications">🔔</button>
+        </div>
+        <div class="d-flex align-center gap-2">
+          <div class="user-avatar" id="user-initial">B</div>
+          <div class="user-info">
+            <div class="user-name" id="user-display-name">BHW User</div>
+            <div class="user-role" id="user-display-role">Barangay Health Worker</div>
+          </div>
+        </div>
+        <button type="button" class="header-logout" onclick="confirmLogout()">Log Out</button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <div class="page-toolbar">
+        <button type="button" class="btn btn-primary">📥 Export Data</button>
+      </div>
+
+      <div class="health-tabs" role="tablist">
+        <button type="button" class="health-tab" data-tab="immunization" role="tab">Immunizations</button>
+        <button type="button" class="health-tab" data-tab="timbang" role="tab">Operation Timbang</button>
+        <button type="button" class="health-tab" data-tab="vitamina" role="tab">Vitamin A</button>
+        <button type="button" class="health-tab" data-tab="deworming" role="tab">Deworming</button>
+        <button type="button" class="health-tab" data-tab="risk" role="tab">Risk Assessment</button>
+        <button type="button" class="health-tab" data-tab="family" role="tab">Family Planning</button>
+        <button type="button" class="health-tab" data-tab="maternal" role="tab">Maternal Care</button>
+        <button type="button" class="health-tab" data-tab="death" role="tab">Death</button>
+      </div>
+
+      <!-- Immunizations -->
+      <section class="health-panel" id="panel-immunization" data-panel="immunization">
+        <div class="stats-grid" style="margin-bottom:20px;">
+          <div class="stat-card">
+            <div class="stat-icon green">👶</div>
+            <div class="stat-info"><div class="stat-value">60</div><div class="stat-label">Total Infants</div></div>
+          </div>
+          <div class="stat-card stat-card--accent-pink">
+            <div class="stat-icon green">👧</div>
+            <div class="stat-info"><div class="stat-value">32</div><div class="stat-label">Female</div></div>
+          </div>
+          <div class="stat-card stat-card--accent-blue">
+            <div class="stat-icon blue">👦</div>
+            <div class="stat-info"><div class="stat-value">28</div><div class="stat-label">Male</div></div>
+          </div>
+        </div>
+        <div class="filter-bar page-actions" style="margin-bottom:16px;">
+          <input type="text" class="form-control" style="max-width:260px;" placeholder="Search infant...">
+          <select class="filter-select"><option>All Zones</option><option>Zone 1</option><option>Zone 2</option></select>
+          <select class="filter-select"><option>All Ages</option><option>0–11 mos</option><option>12–59 mos</option></select>
+          <select class="filter-select"><option>All Sex</option><option>Female</option><option>Male</option></select>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Immunization registry</div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr><th>Full Name</th><th>Birth Status</th><th>Age</th><th>Health Status</th><th>Vaccine Record</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Kristine Reyes</td><td>Normal</td><td>3 Months</td><td><span class="badge badge-green">Normal</span></td><td><button type="button" class="btn btn-secondary btn-sm">View</button> <button type="button" class="btn btn-primary btn-sm">Add</button></td></tr>
+                <tr><td>Juan Bautista</td><td>Normal</td><td>6 Months</td><td><span class="badge badge-green">Normal</span></td><td><button type="button" class="btn btn-secondary btn-sm">View</button> <button type="button" class="btn btn-primary btn-sm">Add</button></td></tr>
+                <tr><td>Maria Santos</td><td>Normal</td><td>1 Year</td><td><span class="badge badge-yellow">Monitor</span></td><td><button type="button" class="btn btn-secondary btn-sm">View</button> <button type="button" class="btn btn-primary btn-sm">Add</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Operation Timbang -->
+      <section class="health-panel" id="panel-timbang" data-panel="timbang">
+        <div class="stats-grid" style="margin-bottom:20px;">
+          <div class="stat-card"><div class="stat-icon green">⚖️</div><div class="stat-info"><div class="stat-value">48</div><div class="stat-label">Weighed this quarter</div></div></div>
+          <div class="stat-card stat-card--accent-amber"><div class="stat-icon yellow">📅</div><div class="stat-info"><div class="stat-value">12</div><div class="stat-label">Due for follow-up</div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Operation Timbang</div></div>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Full Name</th><th>Age</th><th>Health Status</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr><td>Ana Garcia</td><td>8 mos</td><td><span class="badge badge-green">Normal</span></td><td><button type="button" class="btn btn-secondary btn-sm">View</button></td></tr>
+                <tr><td>Pedro Lopez</td><td>14 mos</td><td><span class="badge badge-green">Normal</span></td><td><button type="button" class="btn btn-secondary btn-sm">View</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Vitamin A -->
+      <section class="health-panel" id="panel-vitamina" data-panel="vitamina">
+        <div class="stats-grid" style="margin-bottom:20px;">
+          <div class="stat-card"><div class="stat-icon green">💊</div><div class="stat-info"><div class="stat-value">120</div><div class="stat-label">Children reached</div></div></div>
+          <div class="stat-card stat-card--accent-blue"><div class="stat-icon blue">%</div><div class="stat-info"><div class="stat-value">92%</div><div class="stat-label">Coverage</div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Vitamin A supplementation (summary)</div></div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr><th>Age Group</th><th>Target</th><th>100k IU (M/F/T)</th><th>200k IU (M/F/T)</th><th>% Accomplishment</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>6 – 11 mos.</td><td>24</td><td>4 / 5 / 9</td><td>—</td><td>38%</td></tr>
+                <tr><td>12 – 59 mos.</td><td>80</td><td>—</td><td>18 / 22 / 40</td><td>50%</td></tr>
+                <tr><td><strong>Total</strong></td><td><strong>104</strong></td><td colspan="2"></td><td><strong>46%</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Deworming -->
+      <section class="health-panel" id="panel-deworming" data-panel="deworming">
+        <div class="stats-grid" style="margin-bottom:20px;">
+          <div class="stat-card"><div class="stat-icon green">📅</div><div class="stat-info"><div class="stat-value">55</div><div class="stat-label">1st Round (July)</div></div></div>
+          <div class="stat-card stat-card--accent-pink"><div class="stat-icon purple">📅</div><div class="stat-info"><div class="stat-value">52</div><div class="stat-label">2nd Round (Jan)</div></div></div>
+          <div class="stat-card stat-card--accent-blue"><div class="stat-icon blue">✓</div><div class="stat-info"><div class="stat-value">94%</div><div class="stat-label">Completion</div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Deworming rounds</div></div>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Full Name</th><th>Age</th><th>July Round</th><th>January Round</th></tr></thead>
+              <tbody>
+                <tr><td>Luis Cruz</td><td>4</td><td>Jul 12, 2025</td><td>Jan 08, 2026</td></tr>
+                <tr><td>Elena Ramos</td><td>7</td><td>Jul 12, 2025</td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Risk -->
+      <section class="health-panel" id="panel-risk" data-panel="risk">
+        <div class="stats-grid" style="margin-bottom:20px;">
+          <div class="stat-card"><div class="stat-icon green">📊</div><div class="stat-info"><div class="stat-value">60</div><div class="stat-label">Total assessment clients</div></div></div>
+          <div class="stat-card stat-card--accent-pink"><div class="stat-icon green">✓</div><div class="stat-info"><div class="stat-value">24</div><div class="stat-label">Low risk</div></div></div>
+          <div class="stat-card stat-card--accent-blue"><div class="stat-icon blue">◆</div><div class="stat-info"><div class="stat-value">18</div><div class="stat-label">Moderate</div></div></div>
+          <div class="stat-card stat-card--accent-red"><div class="stat-icon red">⚠</div><div class="stat-info"><div class="stat-value">12</div><div class="stat-label">High risk</div></div></div>
+          <div class="stat-card stat-card--accent-amber"><div class="stat-icon yellow">!</div><div class="stat-info"><div class="stat-value">6</div><div class="stat-label">Critical</div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Risk assessment</div></div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr><th>Full Name</th><th>BMI</th><th>BP</th><th>Smoking</th><th>Alcohol</th><th>Activity</th><th>Diet</th><th>Medical History</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Kristine Reyes</td><td>Normal</td><td>Normal</td><td>No</td><td>No</td><td>Active</td><td>Balanced</td><td>None</td></tr>
+                <tr><td>Carlos Mendez</td><td>Overweight</td><td>Elevated</td><td>Yes</td><td>Occasional</td><td>Low</td><td>High salt</td><td>Hypertension</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Family Planning -->
+      <section class="health-panel" id="panel-family" data-panel="family">
+        <div class="stats-grid" style="margin-bottom:20px;">
+          <div class="stat-card"><div class="stat-icon green">👥</div><div class="stat-info"><div class="stat-value">60</div><div class="stat-label">Total FP patients</div></div></div>
+          <div class="stat-card stat-card--accent-amber"><div class="stat-icon yellow">📆</div><div class="stat-info"><div class="stat-value">14</div><div class="stat-label">Due for follow-up</div></div></div>
+          <div class="stat-card stat-card--accent-red"><div class="stat-icon red">✕</div><div class="stat-info"><div class="stat-value">5</div><div class="stat-label">Missed follow-up</div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Family planning clients</div></div>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Full Name</th><th>Age</th><th>Client Type</th><th>Method</th><th>Start Date</th><th>Next Visit</th><th>Med School</th></tr></thead>
+              <tbody>
+                <tr><td>Rosa Villarin</td><td>29</td><td>New Acceptor</td><td>Pills</td><td>Jan 10, 2026</td><td>Apr 10, 2026</td><td>Yes</td></tr>
+                <tr><td>Nina Cruz</td><td>34</td><td>Continuing</td><td>IUD</td><td>Jun 02, 2025</td><td>Mar 15, 2026</td><td>No</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Maternal -->
+      <section class="health-panel" id="panel-maternal" data-panel="maternal">
+        <div class="stats-grid" style="margin-bottom:20px;">
+          <div class="stat-card"><div class="stat-icon green">🤰</div><div class="stat-info"><div class="stat-value">60</div><div class="stat-label">Pregnancy clients</div></div></div>
+          <div class="stat-card stat-card--accent-red"><div class="stat-icon red">⚠</div><div class="stat-info"><div class="stat-value">4</div><div class="stat-label">High risk</div></div></div>
+          <div class="stat-card stat-card--accent-blue"><div class="stat-icon blue">📅</div><div class="stat-info"><div class="stat-value">11</div><div class="stat-label">Due prenatal</div></div></div>
+          <div class="stat-card stat-card--accent-pink"><div class="stat-icon green">👶</div><div class="stat-info"><div class="stat-value">8</div><div class="stat-label">Delivered</div></div></div>
+          <div class="stat-card stat-card--accent-amber"><div class="stat-icon yellow">!</div><div class="stat-info"><div class="stat-value">3</div><div class="stat-label">Incomplete prenatal</div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Maternal care</div></div>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Full Name</th><th>Age Group</th><th>LMP</th><th>Gravida/Para</th><th>EDD</th><th>Delivery Expect</th><th>PhilHealth</th><th>Prenatal Visits</th></tr></thead>
+              <tbody>
+                <tr><td>Jamila Reyes</td><td>20–35</td><td>Aug 01, 2025</td><td>G2P1</td><td>May 08, 2026</td><td>Facility</td><td>Yes</td><td>3/6</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Death -->
+      <section class="health-panel" id="panel-death" data-panel="death">
+        <div class="stats-grid" style="margin-bottom:20px;">
+          <div class="stat-card"><div class="stat-icon green">📋</div><div class="stat-info"><div class="stat-value">60</div><div class="stat-label">Total deaths (period)</div></div></div>
+          <div class="stat-card stat-card--accent-pink"><div class="stat-icon green">F</div><div class="stat-info"><div class="stat-value">33</div><div class="stat-label">Female</div></div></div>
+          <div class="stat-card stat-card--accent-blue"><div class="stat-icon blue">M</div><div class="stat-info"><div class="stat-value">27</div><div class="stat-label">Male</div></div></div>
+        </div>
+        <div class="filter-bar page-actions" style="margin-bottom:16px;">
+          <select class="filter-select"><option>All Zones</option></select>
+          <select class="filter-select"><option>Cause of Death</option></select>
+          <select class="filter-select"><option>Sex</option></select>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Death registry</div></div>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Full Name</th><th>Age</th><th>Cause of Death</th><th>Date of Death</th></tr></thead>
+              <tbody>
+                <tr><td>Ricardo Gomez</td><td>72</td><td>Stroke</td><td>Feb 02, 2026</td></tr>
+                <tr><td>Teresa Lim</td><td>81</td><td>Pneumonia</td><td>Jan 18, 2026</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script>
+(function () {
+  const titles = {
+    immunization: ['Immunizations', 'Vaccination records and infant immunity monitoring'],
+    timbang: ['Operation Timbang', 'Weight and height monitoring for children'],
+    vitamina: ['Vitamin A Supplementation', 'Dosing logs by age cohort'],
+    deworming: ['Deworming', 'Semi-annual mass deworming rounds'],
+    risk: ['Risk Assessment', 'Lifestyle, vitals, and medical history screening'],
+    family: ['Family Planning', 'Client methods, visits, and follow-ups'],
+    maternal: ['Maternal Care', 'Prenatal visits and high-risk tracking'],
+    death: ['Death Records', 'Mortality reporting and certification']
+  };
+
+  function showTab(tab) {
+    const t = titles[tab] ? tab : 'immunization';
+    document.querySelectorAll('.health-tab').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tab === t);
+    });
+    document.querySelectorAll('.health-panel').forEach(p => {
+      p.classList.toggle('active', p.dataset.panel === t);
+    });
+    document.querySelectorAll('[data-hr-tab]').forEach(a => {
+      a.classList.toggle('active', a.dataset.hrTab === t);
+    });
+    const tt = titles[t];
+    document.getElementById('hr-page-title').textContent = tt[0];
+    document.getElementById('hr-page-sub').textContent = tt[1];
+    history.replaceState(null, '', 'health-records.html?tab=' + t);
+  }
+
+  document.querySelectorAll('.health-tab').forEach(btn => {
+    btn.addEventListener('click', () => showTab(btn.dataset.tab));
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    updateHeaderUserInfo();
+    const params = new URLSearchParams(window.location.search);
+    showTab(params.get('tab') || 'immunization');
+  });
+})();
+</script>
+</body>
+</html>

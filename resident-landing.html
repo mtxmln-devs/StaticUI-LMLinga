@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LMLinga – Resident Portal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Resident Landing Specific Styles */
+    .resident-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 40px;
+      padding: 60px 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .resident-hero-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+      transform: translateX(10px);
+    }
+    .resident-hero-content .hero-badge {
+      display: inline-block;
+      background: var(--highlight);
+      color: var(--green-dark);
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .resident-hero-content h1 {
+      font-size: 2.9rem;
+      font-weight: 800;
+      color: var(--dark-text);
+      line-height: 1.1;
+      margin: 0;
+      letter-spacing: 0.1rem;
+    }
+    .resident-hero-content .hero-line2 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--dark-text);
+      line-height: 1.2;
+      margin-top: 4px;
+    }
+    .resident-hero-content .hero-line2 span {
+      color: var(--primary);
+    }
+    .resident-hero-content p {
+      font-size: 1.3rem;
+      color: var(--gray-dark);
+      line-height: 1.7;
+      max-width: 780px;
+      margin-top: 8px;
+      letter-spacing: 1px;
+    }
+    .resident-hero-actions {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      
+    }
+    .resident-hero-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .resident-hero-image img {
+      max-width: 100%;
+      height: auto;
+      max-height: 520px;
+      margin-top: -10px;
+      object-fit: contain;
+    }
+    
+    /* Poppins font for logo */
+    .nav-brand-text .name {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .resident-hero-content {
+        transform: translateX(-100px);
+      }
+    }
+    @media (max-width: 768px) {
+      .resident-hero {
+        grid-template-columns: 1fr;
+        padding: 40px 20px;
+        text-align: center;
+      }
+      .resident-hero-content {
+        align-items: center;
+        transform: translateX(0);
+      }
+      .resident-hero-content h1 {
+        font-size: 2.2rem;
+      }
+      .resident-hero-content .hero-line2 {
+        font-size: 1.8rem;
+      }
+      .resident-hero-image {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="landing-page">
+
+  <!-- NAVBAR -->
+  <nav class="landing-nav">
+    <div class="nav-brand">
+      <div class="nav-brand-logos">
+        <img src="img/logo.png" alt="LMLinga Logo">
+      </div>
+      <div class="nav-brand-text">
+        <div class="name">LMLinga</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="resident-hero">
+    <div class="resident-hero-content">
+      <h1>SMART HEALTH SUPPORT <br>FOR EVERY RESIDENT </h1>
+      <p>
+        A multilingual chatbot offering quick and accessible health information to inform and educate, not diagnose.  
+      </p>
+      <div class="resident-hero-actions">
+        <a href="resident-register.html" class="btn btn-primary btn-lg">Register</a>
+        <a href="resident-login.html" class="btn btn-secondary btn-lg">Login</a>
+      </div>
+    </div>
+    <div class="resident-hero-image">
+      <img src="img/ai.png" alt="AI Health Assistant">
+    </div>
+  </section>
+
+</div>
+
+<div id="toast-container"></div>
+<script src="js/app.js"></script>
+</body>
+</html>

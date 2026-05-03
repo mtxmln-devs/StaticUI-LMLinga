@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blueprint – Staff Dashboard (layout reference)</title>
+  <style>
+    :root { --line: #94a3b8; --bg: #f1f5f9; --accent: #22c55e; }
+    body { font-family: system-ui, sans-serif; margin: 0; background: var(--bg); color: #0f172a; }
+    .note { max-width: 960px; margin: 0 auto; padding: 16px 24px; font-size: 14px; line-height: 1.5; }
+    .frame { display: flex; min-height: 100vh; border: 2px dashed var(--line); margin: 16px; border-radius: 12px; overflow: hidden; background: #fff; }
+    .side { width: 260px; border-right: 2px dashed var(--line); padding: 12px; background: #0b3d0b; color: #fff; font-size: 12px; }
+    .side h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.7; margin: 16px 0 8px; }
+    .side ul { list-style: none; padding: 0; margin: 0; }
+    .side li { padding: 8px 0; border-bottom: 1px dashed rgba(255,255,255,0.15); }
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .top { border-bottom: 2px dashed var(--line); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 16px; }
+    .kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+    .kpi { border: 2px dashed var(--accent); border-radius: 8px; padding: 16px; text-align: center; font-weight: 600; font-size: 13px; }
+    .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; flex: 1; min-height: 400px; }
+    .col { border: 2px dashed var(--line); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 12px; font-size: 12px; }
+    .block { flex: 1; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 10px; min-height: 80px; }
+    @media (max-width: 1024px) { .kpis { grid-template-columns: repeat(2, 1fr); } .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <p class="note">
+    Static layout reference for <strong>dashboard.html</strong>. Production UI lives in <code>dashboard.html</code> + <code>css/style.css</code> + <code>css/dashboard.css</code>.
+    Regions: fixed sidebar (logo, main nav, health submenu, tools), sticky top bar (menu, title, search, user), KPI strip, then two columns (map + activity | indicators + quick actions + purok table).
+  </p>
+  <div class="frame">
+    <aside class="side">
+      <div class="block" style="min-height:48px;">Logo + brand</div>
+      <h2>Main menu</h2>
+      <ul><li>Dashboard</li><li>Spot mapping</li><li>Household profiling</li></ul>
+      <h2>Health records</h2>
+      <ul><li>Immunization … Death (submenu)</li></ul>
+      <h2>Tools</h2>
+      <ul><li>AI Chatbot</li></ul>
+      <div class="block" style="margin-top:auto;">Logout</div>
+    </aside>
+    <div class="main">
+      <header class="top">
+        <span>☰ Page title + subtitle</span>
+        <span>Search · User</span>
+      </header>
+      <div class="body">
+        <div class="kpis">
+          <div class="kpi">KPI 1</div><div class="kpi">KPI 2</div><div class="kpi">KPI 3</div><div class="kpi">KPI 4</div><div class="kpi">KPI 5</div>
+        </div>
+        <div class="grid">
+          <div class="col">
+            <div class="block">Spot map preview + legend</div>
+            <div class="block">Recent activity list</div>
+          </div>
+          <div class="col">
+            <div class="block">Health indicators grid</div>
+            <div class="block">Quick access buttons</div>
+            <div class="block">Purok summary table</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

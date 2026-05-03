@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Household Profiling – LMLinga</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/app.js"></script>
+  <script>protectStaffPage();</script>
+</head>
+
+<body>
+
+<div class="app-layout">
+
+  <!-- ---- SIDEBAR ---- -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <img src="img/logo.png" alt="LMLinga" onerror="this.style.display='none'">
+
+      <div class="sidebar-logo-text">
+        <span class="brand">LMLinga</span>
+        <span class="sub">Health Center</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Main Menu</div>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span>Dashboard</a>
+      <a href="spot-mapping.html" class="nav-item"><span class="nav-icon">🗺️</span>Spot Mapping</a>
+      <a href="profiling.html" class="nav-item active"><span class="nav-icon">🏡</span>Household Profiling</a>
+      <div class="nav-label">Health Records</div>
+      <div class="nav-item" onclick="toggleSubmenu()">
+        <span class="nav-icon">🩺</span>Health Records
+        <span class="nav-toggle" id="health-arrow">▾</span>
+      </div>
+      <div class="nav-submenu" id="health-submenu">
+        <a href="health-records.html?tab=immunization" class="nav-item"><span class="nav-icon">💉</span>Immunizations</a>
+        <a href="health-records.html?tab=timbang" class="nav-item"><span class="nav-icon">⚖️</span>Operation Timbang</a>
+        <a href="health-records.html?tab=vitamina" class="nav-item"><span class="nav-icon">💊</span>Vitamin A</a>
+        <a href="health-records.html?tab=deworming" class="nav-item"><span class="nav-icon">🔬</span>Deworming</a>
+        <a href="health-records.html?tab=risk" class="nav-item"><span class="nav-icon">⚠️</span>Risk Assessment</a>
+        <a href="health-records.html?tab=family" class="nav-item"><span class="nav-icon">👨‍👩‍👧</span>Family Planning</a>
+        <a href="health-records.html?tab=maternal" class="nav-item"><span class="nav-icon">🤱</span>Maternal Care</a>
+        <a href="health-records.html?tab=death" class="nav-item"><span class="nav-icon">📋</span>Death</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="confirmLogout()"><span>🚪</span>Logout</button>
+    </div>
+  </aside>
+
+  <!-- ---- MAIN CONTENT ---- -->
+  <div class="main-content">
+
+    <header class="header">
+      <div class="header-left">
+        <button class="map-btn" onclick="toggleSidebar()">☰</button>
+        <div>
+          <div class="page-title">Household Profiling</div>
+          <div class="page-subtitle">Manage your profiling and household in the barangay</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="text" placeholder="Search household..." oninput="searchHouseholds(this.value)">
+        </div>
+        <div class="header-actions">
+          <button type="button" class="header-icon-btn" title="Notifications">🔔</button>
+        </div>
+        <div class="d-flex align-center gap-2">
+          <div class="user-avatar" id="user-initial">B</div>
+          <div class="user-info">
+            <div class="user-name" id="user-display-name">BHW User</div>
+            <div class="user-role" id="user-display-role">Barangay Health Worker</div>
+          </div>
+        </div>
+        <button type="button" class="header-logout" onclick="confirmLogout()">Log Out</button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <div class="page-toolbar" style="justify-content:flex-end;margin-bottom:16px;">
+        <button type="button" class="btn btn-primary">📥 Export Data</button>
+      </div>
+
+      <!-- Stat Mini-Cards -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px;">
+        <div class="stat-card">
+          <div class="stat-icon green">🏡</div>
+          <div class="stat-info"><div class="stat-value" id="total-hh">8</div><div class="stat-label">Total Households</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue">👥</div>
+          <div class="stat-info"><div class="stat-value" id="total-members">38</div><div class="stat-label">Total Members</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon yellow">⚠️</div>
+          <div class="stat-info"><div class="stat-value">2</div><div class="stat-label">At-Risk</div></div>
+        </div>
+      </div>
+
+      <!-- Action Bar -->
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="showModal('addHHModal')">
+          ➕ Add Household
+        </button>
+        <select class="filter-select" onchange="filterHH(this.value)">
+          <option value="all">All Puroks</option>
+          <option value="Purok 1">Purok 1</option>
+          <option value="Purok 2">Purok 2</option>
+          <option value="Purok 3">Purok 3</option>
+          <option value="Purok 4">Purok 4</option>
+          <option value="Purok 5">Purok 5</option>
+        </select>
+        <select class="filter-select" onchange="filterHHStatus(this.value)">
+          <option value="all">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+
+      <!-- Households Table -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🏡 Household Records</div>
+          <div style="font-size:0.8rem;color:var(--gray);" id="hh-count-label">Showing 8 records</div>
+        </div>
+        <div class="table-wrapper">
+          <table id="hhTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Household Name</th>
+                <th>Address / Purok</th>
+                <th>Head of Family</th>
+                <th>Members</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="hhTableBody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     ADD HOUSEHOLD MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="addHHModal">
+  <div class="modal" style="max-width:620px;">
+    <div class="modal-header">
+      <div class="modal-title">🏡 Add New Household</div>
+      <button class="modal-close" onclick="closeModal('addHHModal')">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Household Info -->
+      <div style="font-size:0.78rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">
+        Household Information
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Household Name *</label>
+          <input type="text" class="form-control" id="hhName" placeholder="e.g. Dela Cruz Family">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Purok *</label>
+          <select class="form-control" id="hhPurok">
+            <option value="" disabled selected>Select Purok</option>
+            <option>Purok 1</option><option>Purok 2</option>
+            <option>Purok 3</option><option>Purok 4</option><option>Purok 5</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Full Address *</label>
+        <input type="text" class="form-control" id="hhAddress" placeholder="e.g. Purok 1, Barangay La Medalla, Iriga City">
+      </div>
+
+      <!-- Head of Family -->
+      <div style="font-size:0.78rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:1px;margin:16px 0 12px;">
+        Head of Family
+      </div>
+      <div class="form-row cols-3">
+        <div class="form-group">
+          <label class="form-label">First Name *</label>
+          <input type="text" class="form-control" id="headFirst" placeholder="First">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Middle Name</label>
+          <input type="text" class="form-control" id="headMiddle" placeholder="Middle">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name *</label>
+          <input type="text" class="form-control" id="headLast" placeholder="Last">
+        </div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Contact Number</label>
+          <input type="tel" class="form-control" id="headContact" placeholder="09XXXXXXXXX">
+        </div>
+        <div class="form-group">
+          <label class="form-label">No. of Members</label>
+          <input type="number" class="form-control" id="hhMembers" min="1" placeholder="e.g. 4">
+        </div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">House Type</label>
+          <select class="form-control" id="hhHouseType">
+            <option>Concrete</option><option>Semi-Concrete</option>
+            <option>Wood</option><option>Light Material</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Water Source</label>
+          <select class="form-control" id="hhWater">
+            <option>Level 3 (Piped)</option><option>Level 2 (Communal)</option>
+            <option>Level 1 (Point Source)</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('addHHModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addHousehold()">💾 Save Household</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW HOUSEHOLD MODAL -->
+<div class="modal-overlay" id="viewHHModal">
+  <div class="modal" style="max-width:540px;">
+    <div class="modal-header">
+      <div class="modal-title">🏡 Household Details</div>
+      <button class="modal-close" onclick="closeModal('viewHHModal')">✕</button>
+    </div>
+    <div class="modal-body" id="viewHHBody">
+      <!-- Filled by JS -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('viewHHModal')">Close</button>
+      <button class="btn btn-primary" onclick="closeModal('viewHHModal');showModal('addMemberModal')">➕ Add Member</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MEMBER MODAL -->
+<div class="modal-overlay" id="addMemberModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">👤 Add Household Member</div>
+      <button class="modal-close" onclick="closeModal('addMemberModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row cols-3">
+        <div class="form-group">
+          <label class="form-label">First Name *</label>
+          <input type="text" class="form-control" id="memFirst" placeholder="First">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Middle Name</label>
+          <input type="text" class="form-control" id="memMiddle" placeholder="Middle">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name *</label>
+          <input type="text" class="form-control" id="memLast" placeholder="Last">
+        </div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Date of Birth</label>
+          <input type="date" class="form-control" id="memDOB">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Sex</label>
+          <select class="form-control" id="memSex">
+            <option>Female</option><option>Male</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Civil Status</label>
+          <select class="form-control" id="memCivil">
+            <option>Single</option><option>Married</option>
+            <option>Widowed</option><option>Separated</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Relationship to Head</label>
+          <select class="form-control" id="memRelation">
+            <option>Spouse</option><option>Child</option>
+            <option>Parent</option><option>Sibling</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label">Occupation</label>
+          <input type="text" class="form-control" id="memJob" placeholder="e.g. Farmer">
+        </div>
+        <div class="form-group">
+          <label class="form-label">PhilHealth #</label>
+          <input type="text" class="form-control" id="memPhilHealth" placeholder="PhilHealth Number">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('addMemberModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addMember()">💾 Save Member</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="js/app.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    updateHeaderUserInfo();
+  });
+
+  // ---- MOCK HOUSEHOLD DATA ----
+
+  let householdData = [
+    { id:1, name:'Dela Cruz Family', purok:'Purok 1', address:'Purok 1, La Medalla', head:'Juan Dela Cruz', contact:'09171234567', members:5, status:'Active', houseType:'Concrete', water:'Level 3 (Piped)' },
+    { id:2, name:'Santos Household', purok:'Purok 1', address:'Purok 1, La Medalla', head:'Maria Santos',   contact:'09181234567', members:3, status:'Active', houseType:'Semi-Concrete', water:'Level 2 (Communal)' },
+    { id:3, name:'Reyes Family',     purok:'Purok 2', address:'Purok 2, La Medalla', head:'Pedro Reyes',    contact:'09191234567', members:6, status:'Active', houseType:'Concrete', water:'Level 3 (Piped)' },
+    { id:4, name:'Garcia Residence', purok:'Purok 2', address:'Purok 2, La Medalla', head:'Ana Garcia',     contact:'09201234567', members:4, status:'Inactive', houseType:'Wood', water:'Level 1 (Point Source)' },
+    { id:5, name:'Bautista Home',    purok:'Purok 3', address:'Purok 3, La Medalla', head:'Jose Bautista',  contact:'09211234567', members:7, status:'Active', houseType:'Light Material', water:'Level 1 (Point Source)' },
+    { id:6, name:'Lopez Family',     purok:'Purok 3', address:'Purok 3, La Medalla', head:'Rosa Lopez',     contact:'09221234567', members:4, status:'Active', houseType:'Concrete', water:'Level 3 (Piped)' },
+    { id:7, name:'Martinez Family',  purok:'Purok 4', address:'Purok 4, La Medalla', head:'Carlos Martinez',contact:'09231234567', members:5, status:'Active', houseType:'Semi-Concrete', water:'Level 2 (Communal)' },
+    { id:8, name:'Torres Household', purok:'Purok 5', address:'Purok 5, La Medalla', head:'Lita Torres',    contact:'09241234567', members:4, status:'Active', houseType:'Concrete', water:'Level 3 (Piped)' },
+  ];
+
+  let filteredData = [...householdData];
+
+  // Render table on load
+  document.addEventListener('DOMContentLoaded', () => renderTable(householdData));
+
+  function renderTable(data) {
+    const tbody = document.getElementById('hhTableBody');
+    document.getElementById('hh-count-label').textContent = `Showing ${data.length} records`;
+    document.getElementById('total-hh').textContent = householdData.length;
+    document.getElementById('total-members').textContent = householdData.reduce((a,h)=>a+h.members,0);
+
+    if (data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gray);padding:24px;">No records found.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = data.map((hh, i) => `
+      <tr>
+        <td style="font-weight:600; color:var(--gray);">${i+1}</td>
+        <td style="font-weight:600;">${hh.name}</td>
+        <td>
+          <div style="font-size:0.83rem;">${hh.address}</div>
+          <div style="font-size:0.73rem;color:var(--gray);">${hh.purok}</div>
+        </td>
+        <td>${hh.head}</td>
+        <td><span class="badge badge-blue">${hh.members} members</span></td>
+        <td><span class="badge ${hh.status==='Active'?'badge-green':'badge-gray'}">${hh.status}</span></td>
+        <td>
+          <div style="display:flex;gap:6px;">
+            <button class="btn btn-secondary btn-sm" onclick="viewHH(${hh.id})">👁️</button>
+            <button class="btn btn-primary btn-sm" onclick="editHH(${hh.id})">✏️</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteHH(${hh.id})">🗑️</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  // View household
+  function viewHH(id) {
+    const hh = householdData.find(h => h.id === id);
+    document.getElementById('viewHHBody').innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div><div class="form-label">Household Name</div><div style="font-weight:600;">${hh.name}</div></div>
+        <div><div class="form-label">Purok</div><div style="font-weight:600;">${hh.purok}</div></div>
+        <div style="grid-column:span 2"><div class="form-label">Address</div><div style="font-weight:600;">${hh.address}</div></div>
+        <div><div class="form-label">Head of Family</div><div style="font-weight:600;">${hh.head}</div></div>
+        <div><div class="form-label">Contact</div><div style="font-weight:600;">${hh.contact}</div></div>
+        <div><div class="form-label">Members</div><div style="font-weight:600;">${hh.members}</div></div>
+        <div><div class="form-label">Status</div><span class="badge ${hh.status==='Active'?'badge-green':'badge-gray'}">${hh.status}</span></div>
+        <div><div class="form-label">House Type</div><div style="font-weight:600;">${hh.houseType}</div></div>
+        <div><div class="form-label">Water Source</div><div style="font-weight:600;">${hh.water}</div></div>
+      </div>
+    `;
+    showModal('viewHHModal');
+  }
+
+  function editHH(id) { showToast('Edit feature coming soon!', 'success'); }
+
+  // Delete household
+  function deleteHH(id) {
+    if (confirm('Delete this household record?')) {
+      householdData = householdData.filter(h => h.id !== id);
+      renderTable(householdData);
+      showToast('Household deleted.', 'success');
+    }
+  }
+
+  // Add household
+  function addHousehold() {
+    const name    = document.getElementById('hhName').value.trim();
+    const purok   = document.getElementById('hhPurok').value;
+    const address = document.getElementById('hhAddress').value.trim();
+    const first   = document.getElementById('headFirst').value.trim();
+    const last    = document.getElementById('headLast').value.trim();
+    const members = parseInt(document.getElementById('hhMembers').value) || 1;
+
+    if (!name || !purok || !first || !last) {
+      showToast('Please fill in all required fields.', 'error'); return;
+    }
+
+    householdData.push({
+      id: householdData.length + 1,
+      name, purok, address: address || purok + ', La Medalla',
+      head: first + ' ' + last,
+      contact: document.getElementById('headContact').value,
+      members, status: 'Active',
+      houseType: document.getElementById('hhHouseType').value,
+      water: document.getElementById('hhWater').value
+    });
+
+    renderTable(householdData);
+    closeModal('addHHModal');
+    showToast('Household added successfully!', 'success');
+  }
+
+  function addMember() {
+    const first = document.getElementById('memFirst').value.trim();
+    const last  = document.getElementById('memLast').value.trim();
+    if (!first || !last) { showToast('Please enter member name.', 'error'); return; }
+    closeModal('addMemberModal');
+    showToast(`Member ${first} ${last} added!`, 'success');
+  }
+
+  function searchHouseholds(q) {
+    const filtered = householdData.filter(h =>
+      h.name.toLowerCase().includes(q.toLowerCase()) ||
+      h.head.toLowerCase().includes(q.toLowerCase())
+    );
+    renderTable(filtered);
+  }
+
+  function filterHH(purok) {
+    const filtered = purok === 'all' ? householdData : householdData.filter(h => h.purok === purok);
+    renderTable(filtered);
+  }
+
+  function filterHHStatus(status) {
+    const filtered = status === 'all' ? householdData : householdData.filter(h => h.status === status);
+    renderTable(filtered);
+  }
+</script>
+</body>
+</html>

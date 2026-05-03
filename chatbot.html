@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Chatbot – LMLinga</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/app.js"></script>
+  <script>protectResidentOnlyPage();</script>
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ---- SIDEBAR ---- -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <img src="img/logo.png" alt="LMLinga" onerror="this.style.display='none'">
+
+      <div class="sidebar-logo-text">
+        <span class="brand">LMLinga</span>
+        <span class="sub">Health Center</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Main Menu</div>
+      <div id="sidebar-nav"></div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="confirmLogout()"><span>🚪</span>Logout</button>
+    </div>
+  </aside>
+
+  <!-- ---- MAIN CONTENT ---- -->
+  <div class="main-content">
+
+    <header class="header">
+      <div class="header-left">
+        <button class="map-btn" onclick="toggleSidebar()">☰</button>
+        <div>
+<div class="page-title">Ling - AI Health Assistant</div>
+          <div class="page-subtitle">Ask health questions in any language</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="search" placeholder="Search..." autocomplete="off">
+        </div>
+        <div class="header-actions">
+          <button type="button" class="header-icon-btn" title="Notifications">🔔</button>
+        </div>
+        <div class="d-flex align-center gap-2">
+          <div class="user-avatar" id="user-initial">?</div>
+          <div class="user-info">
+            <div class="user-name" id="user-display-name">User</div>
+            <div class="user-role" id="user-display-role">Role</div>
+          </div>
+        </div>
+        <button type="button" class="header-logout" onclick="confirmLogout()">Log Out</button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- ---- CHATBOT LAYOUT ---- -->
+      <div class="chatbot-layout">
+
+        <!-- ---- CHAT SIDEBAR ---- -->
+        <div class="chat-sidebar">
+
+          <!-- Bot Profile -->
+          <div class="chat-profile">
+            <div class="chat-bot-avatar">
+              <img src="img/ai.png" alt="AI Bot" onerror="this.parentElement.style.background='var(--primary)';this.style.display='none'">
+
+            </div>
+<div class="chat-bot-name">Ling</div>
+            <div class="chat-bot-status">
+              <div class="status-dot"></div>
+              Online · Ready to help
+            </div>
+          </div>
+
+          <!-- Language Toggle -->
+          <div class="lang-buttons">
+            <button class="lang-btn active" id="lang-en" onclick="setLang('en')">🇺🇸 EN</button>
+            <button class="lang-btn" id="lang-tl" onclick="setLang('tl')">🇵🇭 TL</button>
+            <button class="lang-btn" id="lang-bi" onclick="setLang('bi')">🌿 BI</button>
+          </div>
+
+          <!-- Quick Topic Suggestions -->
+          <div class="quick-topics">
+            <h4>💡 Quick Topics</h4>
+
+            <div class="topic-chip" onclick="sendQuick('fever')">
+              🌡️ Fever symptoms
+            </div>
+            <div class="topic-chip" onclick="sendQuick('cough')">
+              😷 Cough & colds
+            </div>
+            <div class="topic-chip" onclick="sendQuick('diarrhea')">
+              💧 Diarrhea & dehydration
+            </div>
+            <div class="topic-chip" onclick="sendQuick('pregnancy')">
+              🤱 Pregnancy care
+            </div>
+            <div class="topic-chip" onclick="sendQuick('nutrition')">
+              🥗 Child nutrition
+            </div>
+            <div class="topic-chip" onclick="sendQuick('vaccination')">
+              💉 Vaccination schedule
+            </div>
+            <div class="topic-chip" onclick="sendQuick('hypertension')">
+              ❤️ Hypertension
+            </div>
+            <div class="topic-chip" onclick="sendQuick('dengue')">
+              🦟 Dengue fever
+            </div>
+            <div class="topic-chip" onclick="sendQuick('vitamins')">
+              💊 Vitamins & supplements
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ---- CHAT MAIN ---- -->
+        <div class="chat-main">
+
+          <!-- Chat Header -->
+          <div class="chat-header">
+            <div class="chat-header-info">
+              <div class="chat-header-avatar">🤖</div>
+              <div>
+<div class="chat-header-name">Hi! I'm Ling, your chatbot</div>
+                <div class="chat-header-sub" id="chat-lang-label">Responding in: English</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="map-btn" onclick="clearChat()" title="Clear Chat">🗑️</button>
+            </div>
+          </div>
+
+          <!-- Messages Area -->
+          <div class="chat-messages" id="chatMessages">
+
+            <!-- Welcome Message -->
+            <div class="message bot">
+              <div class="msg-avatar">🤖</div>
+              <div>
+<div class="bubble">
+                  👋 Hi! I'm <strong>Ling</strong>, your chatbot assistant!<br><br>
+                  I can help answer basic health questions for residents of Barangay La Medalla.
+                  You can ask me about:<br>
+                  🌡️ Fever • 😷 Cough • 💧 Diarrhea • 🤱 Pregnancy • 💉 Vaccines<br><br>
+                  <em>Note: For serious conditions, please visit the Barangay Health Center.</em>
+                </div>
+                <div class="msg-time">Just now</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Typing Indicator (hidden by default) -->
+          <div id="typingIndicator" style="padding:0 20px 8px; display:none;">
+            <div style="display:flex;gap:10px;align-items:center;">
+              <div class="msg-avatar" style="background:var(--primary);color:white;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;">🤖</div>
+              <div class="typing-indicator">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Input Area -->
+          <div class="chat-input-area">
+            <div class="chat-input-row">
+              <textarea
+                class="chat-input"
+                id="chatInput"
+                placeholder="Type your health question here..."
+                rows="1"
+                onkeydown="handleChatKey(event)"
+                oninput="autoResize(this)"
+              ></textarea>
+              <button class="chat-send-btn" id="sendBtn" onclick="sendMessage()">
+                ➤
+              </button>
+            </div>
+            <div style="text-align:center;margin-top:8px;font-size:0.72rem;color:var(--gray);">
+              Press Enter to send · Shift+Enter for new line · For emergencies, call 911
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script>
+  // ============================================================
+  // PAGE INITIALIZATION
+  // ============================================================
+
+  // Render role-based sidebar and update user info on load
+  document.addEventListener('DOMContentLoaded', () => {
+    renderRoleBasedSidebar();
+    updateHeaderUserInfo();
+  });
+
+  // ============================================================
+  // CHATBOT LOGIC
+  // ============================================================
+
+  // Current language
+  let currentLang = 'en';
+
+  // Language labels
+  const langLabels = {
+    en: 'Responding in: English',
+    tl: 'Sumasagot sa: Filipino / Tagalog',
+    bi: 'Nagsasagot sa: Bikol-Iriga'
+  };
+
+  // ---- CHATBOT RESPONSES (keyword-based) ----
+  const responses = {
+    en: {
+      fever: `🌡️ <strong>Fever Advice</strong><br><br>
+        If someone has a fever (temperature above 38°C / 100.4°F):<br>
+        • Give paracetamol as directed on the packaging<br>
+        • Encourage drinking plenty of fluids (water, soup)<br>
+        • Apply lukewarm cloth to forehead<br>
+        • Rest and avoid cold drafts<br><br>
+        ⚠️ <strong>See a doctor if:</strong> fever is above 39.5°C, lasts more than 3 days, or is accompanied by stiff neck, rash, or difficulty breathing.`,
+
+      cough: `😷 <strong>Cough & Cold Advice</strong><br><br>
+        For common cough and colds:<br>
+        • Drink warm fluids like ginger tea or soup<br>
+        • Honey (for adults) can soothe throat<br>
+        • Rest and avoid cold beverages<br>
+        • Cover mouth when coughing (tissue or elbow)<br><br>
+        ⚠️ <strong>See a doctor if:</strong> cough lasts more than 2 weeks, produces blood, or is accompanied by high fever or difficulty breathing.`,
+
+      diarrhea: `💧 <strong>Diarrhea & Dehydration</strong><br><br>
+        To manage diarrhea:<br>
+        • Drink ORS (Oral Rehydration Solution) or homemade: 1L water + 6 tsp sugar + 1/2 tsp salt<br>
+        • Avoid oily, spicy, or dairy foods<br>
+        • Eat soft foods like rice and bananas<br>
+        • Wash hands frequently<br><br>
+        ⚠️ <strong>Seek immediate help if:</strong> stools contain blood, child becomes very lethargic, or symptoms persist more than 2 days.`,
+
+      pregnancy: `🤱 <strong>Pregnancy Care</strong><br><br>
+        Important tips for pregnant mothers:<br>
+        • Attend at least 4 prenatal check-ups<br>
+        • Take iron and folic acid supplements daily<br>
+        • Eat a balanced diet (vegetables, protein, fruits)<br>
+        • Avoid alcohol, cigarettes, and self-medication<br>
+        • Know the danger signs: heavy bleeding, severe headache, blurred vision<br><br>
+        📍 Visit the Barangay Health Center for free prenatal care services.`,
+
+      nutrition: `🥗 <strong>Child Nutrition</strong><br><br>
+        For children under 5:<br>
+        • Breastfeed exclusively for the first 6 months<br>
+        • Introduce complementary foods at 6 months<br>
+        • Give 5 food groups daily: grains, vegetables, fruits, protein, dairy<br>
+        • Attend monthly Operation Timbang<br>
+        • Vitamin A supplementation every 6 months<br><br>
+        📍 The BHW can provide a free growth chart for your child.`,
+
+      vaccination: `💉 <strong>Vaccination Schedule (0–5 years)</strong><br><br>
+        <strong>At Birth:</strong> BCG, Hepatitis B<br>
+        <strong>6 weeks:</strong> Pentavalent 1, OPV 1, PCV 1<br>
+        <strong>10 weeks:</strong> Pentavalent 2, OPV 2, PCV 2<br>
+        <strong>14 weeks:</strong> Pentavalent 3, OPV 3, PCV 3<br>
+        <strong>9 months:</strong> MMR 1<br>
+        <strong>12–15 months:</strong> MMR 2, Varicella<br><br>
+        📍 Free vaccines available at the Barangay Health Center.`,
+
+      hypertension: `❤️ <strong>Hypertension (High Blood Pressure)</strong><br><br>
+        Tips for managing hypertension:<br>
+        • Reduce salt intake (less than 5g per day)<br>
+        • Exercise regularly (30 min walk daily)<br>
+        • Avoid smoking and limit alcohol<br>
+        • Take prescribed medications consistently<br>
+        • Monitor blood pressure regularly<br>
+        • Manage stress through rest and relaxation<br><br>
+        ⚠️ If BP is above 180/120 or you have severe headache/chest pain — seek emergency care.`,
+
+      dengue: `🦟 <strong>Dengue Fever</strong><br><br>
+        Warning signs of dengue:<br>
+        • High fever (39–40°C) for 2–7 days<br>
+        • Severe headache and pain behind eyes<br>
+        • Muscle and joint pain<br>
+        • Skin rash<br>
+        • Nausea and vomiting<br><br>
+        <strong>What to do:</strong><br>
+        • Rest and drink plenty of fluids<br>
+        • Take paracetamol only (NO aspirin or ibuprofen)<br>
+        • Monitor platelet count<br><br>
+        ⚠️ Seek immediate medical attention if there is bleeding, severe abdominal pain, or persistent vomiting.`,
+
+      vitamins: `💊 <strong>Vitamins & Supplements</strong><br><br>
+        Common supplements available at the health center:<br>
+        • <strong>Vitamin A</strong> – for children 6–59 months (every 6 months)<br>
+        • <strong>Iron + Folic Acid</strong> – for pregnant and lactating women<br>
+        • <strong>Zinc</strong> – for children with diarrhea<br>
+        • <strong>Iodine</strong> – use iodized salt for all cooking<br><br>
+        📍 Visit your BHW for free supplements. Do not self-medicate.`,
+
+      default: `🤔 I'm not sure about that specific question. Here are some topics I can help with:<br><br>
+        🌡️ Fever • 😷 Cough • 💧 Diarrhea • 🤱 Pregnancy<br>
+        💉 Vaccines • 🥗 Nutrition • ❤️ Hypertension • 🦟 Dengue<br><br>
+        For medical concerns, please visit the <strong>Barangay La Medalla Health Center</strong> or call your BHW.`
+    },
+
+    tl: {
+      fever: `🌡️ <strong>Payo sa Lagnat</strong><br><br>
+        Kung may lagnat ang isang tao (higit sa 38°C):<br>
+        • Bigyan ng paracetamol ayon sa tamang dosis<br>
+        • Magpainom ng maraming tubig o sabaw<br>
+        • Mag-apply ng malambot na basang tela sa noo<br>
+        • Magpahinga at iwasan ang malamig na hangin<br><br>
+        ⚠️ <strong>Pumunta sa doktor kung:</strong> lagnat na higit 39.5°C, tatlong araw na, o may kasabay na panigas ng leeg o hirap sa paghinga.`,
+
+      cough: `😷 <strong>Payo sa Ubo at Sipon</strong><br><br>
+        Para sa karaniwang ubo at sipon:<br>
+        • Uminom ng mainit na likido tulad ng luya tea o sopas<br>
+        • Magpahinga at iwasan ang malamig na inumin<br>
+        • Takpan ang bibig kung umuubo<br><br>
+        ⚠️ Pumunta sa doktor kung: ubo na mahigit 2 linggo, may dugo, o may mataas na lagnat.`,
+
+      default: `🤔 Hindi ko masagot ang tanong na iyon. Maaari kang magtanong tungkol sa:<br><br>
+        🌡️ Lagnat • 😷 Ubo • 💧 Pagtatae • 🤱 Pagbubuntis<br>
+        💉 Bakuna • 🥗 Nutrisyon • ❤️ Altapresyon • 🦟 Dengue<br><br>
+        Para sa medikal na pag-aalala, bisitahin ang <strong>Barangay Health Center ng La Medalla</strong>.`
+    },
+
+    bi: {
+      fever: `🌡️ <strong>Payo sa Lagnat (Bikol-Iriga)</strong><br><br>
+        Kun may lagnat an sarong tawo (mas sa 38°C):<br>
+        • Itao nin paracetamol base sa tamang dosis<br>
+        • Painom nin dakul na tubig o sabaw<br>
+        • Mag-apply nin basa na bado sa dungaan<br>
+        • Magtukaw asin ligtasan an makulog na hangin<br><br>
+        ⚠️ Pumunta sa doktor kun: lagnat na mas sa 39.5°C, tulo na aldaw na, o may kaibanan na panigas kan liog.`,
+
+      default: `🤔 Dai ko masabat ang hapot na iyan. Puwede kang maghapot manongod sa:<br><br>
+        🌡️ Lagnat • 😷 Ubo • 💧 Aburido • 🤱 Pagbubuntis<br>
+        💉 Bakuna • 🥗 Nutrisyon • ❤️ Matas na Dugo • 🦟 Dengue<br><br>
+        Para sa medikal na kahaditan, bisitahon an <strong>Barangay Health Center kan La Medalla</strong>.`
+    }
+  };
+
+  // ---- SEND MESSAGE ----
+  function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    // Add user bubble
+    addMessage(text, 'user');
+    input.value = '';
+    input.style.height = 'auto';
+
+    // Show typing indicator
+    showTyping();
+
+    // Simulate bot delay
+    setTimeout(() => {
+      hideTyping();
+      const reply = getBotReply(text);
+      addMessage(reply, 'bot');
+    }, 900 + Math.random() * 600);
+  }
+
+  // ---- ADD MESSAGE BUBBLE ----
+  function addMessage(text, role) {
+    const container = document.getElementById('chatMessages');
+    const now = new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+
+    const div = document.createElement('div');
+    div.className = `message ${role}`;
+    div.innerHTML = `
+      <div class="msg-avatar">${role === 'bot' ? '🤖' : '👤'}</div>
+      <div>
+        <div class="bubble">${role === 'bot' ? text : escapeHtml(text)}</div>
+        <div class="msg-time">${now}</div>
+      </div>
+    `;
+
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  // ---- GET BOT REPLY ----
+  function getBotReply(userText) {
+    const lower = userText.toLowerCase();
+    const lang = responses[currentLang] || responses.en;
+
+    // Keyword matching
+    if (lower.includes('fever') || lower.includes('lagnat') || lower.includes('init'))
+      return lang.fever || responses.en.fever;
+    if (lower.includes('cough') || lower.includes('ubo') || lower.includes('sipon'))
+      return lang.cough || responses.en.cough;
+    if (lower.includes('diarrhea') || lower.includes('pagtatae') || lower.includes('aburido') || lower.includes('LBM'))
+      return lang.diarrhea || responses.en.diarrhea;
+    if (lower.includes('pregnant') || lower.includes('pregnancy') || lower.includes('buntis') || lower.includes('pagbubuntis'))
+      return lang.pregnancy || responses.en.pregnancy;
+    if (lower.includes('nutrition') || lower.includes('nutrisyon') || lower.includes('malnourish') || lower.includes('timbang'))
+      return lang.nutrition || responses.en.nutrition;
+    if (lower.includes('vaccine') || lower.includes('vaccination') || lower.includes('bakuna') || lower.includes('immunization'))
+      return lang.vaccination || responses.en.vaccination;
+    if (lower.includes('hypertension') || lower.includes('blood pressure') || lower.includes('alta') || lower.includes('altapresyon'))
+      return lang.hypertension || responses.en.hypertension;
+    if (lower.includes('dengue') || lower.includes('mosquito') || lower.includes('lamok'))
+      return lang.dengue || responses.en.dengue;
+    if (lower.includes('vitamin') || lower.includes('supplement') || lower.includes('iron') || lower.includes('folic'))
+      return lang.vitamins || responses.en.vitamins;
+
+// Greetings
+    if (lower.match(/^(hi|hello|kumusta|kamusta|hola|magandang|good|greet)/))
+      return `👋 Hi! I'm Ling! Kumusta? Magayonon na adlaw!<br><br>I can help you with health questions. What would you like to know about? Type a topic or tap one of the quick topics on the left!`;
+
+    // Default
+    return lang.default || responses.en.default;
+  }
+
+  // ---- QUICK TOPIC SHORTCUT ----
+  function sendQuick(topic) {
+    document.getElementById('chatInput').value = topic;
+    sendMessage();
+  }
+
+  // ---- LANGUAGE TOGGLE ----
+  function setLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('lang-' + lang).classList.add('active');
+    document.getElementById('chat-lang-label').textContent = langLabels[lang];
+
+    const langGreetings = {
+      en: 'Switched to <strong>English</strong>. You can now ask questions in English.',
+      tl: 'Lumipat sa <strong>Filipino/Tagalog</strong>. Maaari ka nang magtanong sa Filipino.',
+      bi: 'Nagbalyo sa <strong>Bikol-Iriga</strong>. Puwede na kang maghapot sa Bikol.'
+    };
+    addMessage(langGreetings[lang], 'bot');
+  }
+
+  // ---- TYPING INDICATOR ----
+  function showTyping() {
+    document.getElementById('typingIndicator').style.display = 'block';
+    document.getElementById('chatMessages').scrollTop = 99999;
+  }
+  function hideTyping() {
+    document.getElementById('typingIndicator').style.display = 'none';
+  }
+
+  // ---- CLEAR CHAT ----
+  function clearChat() {
+    if (confirm('Clear all chat messages?')) {
+      document.getElementById('chatMessages').innerHTML = `
+        <div class="message bot">
+          <div class="msg-avatar">🤖</div>
+          <div>
+<div class="bubble">Chat cleared. I'm still here to help! What would you like to know? 😊</div>
+            <div class="msg-time">Just now</div>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  // ---- AUTO RESIZE TEXTAREA ----
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+  }
+
+  // ---- HANDLE ENTER KEY ----
+  function handleChatKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }
+
+  // ---- ESCAPE HTML to prevent XSS ----
+  function escapeHtml(text) {
+    const d = document.createElement('div');
+    d.textContent = text;
+    return d.innerHTML;
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spot Mapping – LMLinga</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/app.js"></script>
+  <script>protectStaffPage();</script>
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <img src="img/logo.png" alt="LMLinga" onerror="this.style.display='none'">
+      <div class="sidebar-logo-text">
+        <span class="brand">LMLinga</span>
+        <span class="sub">Health Center</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Main Menu</div>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">🏠</span>Dashboard</a>
+      <a href="spot-mapping.html" class="nav-item active"><span class="nav-icon">🗺️</span>Spot Mapping</a>
+      <a href="profiling.html" class="nav-item"><span class="nav-icon">🏡</span>Household Profiling</a>
+      <div class="nav-label">Health Records</div>
+      <div class="nav-item" onclick="toggleSubmenu()">
+        <span class="nav-icon">🩺</span>Health Records
+        <span class="nav-toggle" id="health-arrow">▾</span>
+      </div>
+      <div class="nav-submenu" id="health-submenu">
+        <a href="health-records.html?tab=immunization" class="nav-item"><span class="nav-icon">💉</span>Immunizations</a>
+        <a href="health-records.html?tab=timbang" class="nav-item"><span class="nav-icon">⚖️</span>Operation Timbang</a>
+        <a href="health-records.html?tab=vitamina" class="nav-item"><span class="nav-icon">💊</span>Vitamin A</a>
+        <a href="health-records.html?tab=deworming" class="nav-item"><span class="nav-icon">🔬</span>Deworming</a>
+        <a href="health-records.html?tab=risk" class="nav-item"><span class="nav-icon">⚠️</span>Risk Assessment</a>
+        <a href="health-records.html?tab=family" class="nav-item"><span class="nav-icon">👨‍👩‍👧</span>Family Planning</a>
+        <a href="health-records.html?tab=maternal" class="nav-item"><span class="nav-icon">🤱</span>Maternal Care</a>
+        <a href="health-records.html?tab=death" class="nav-item"><span class="nav-icon">📋</span>Death</a>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="confirmLogout()"><span>🚪</span>Logout</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <header class="header">
+      <div class="header-left">
+        <button class="map-btn" onclick="toggleSidebar()">☰</button>
+        <div>
+          <div class="page-title">Spot Mapping</div>
+          <div class="page-subtitle">Visualize household health status</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="search" placeholder="Search map / household..." autocomplete="off">
+        </div>
+        <div class="header-actions">
+          <button type="button" class="header-icon-btn" title="Notifications">🔔</button>
+        </div>
+        <div class="d-flex align-center gap-2">
+          <div class="user-avatar" id="user-initial">B</div>
+          <div class="user-info">
+            <div class="user-name" id="user-display-name">BHW User</div>
+            <div class="user-role" id="user-display-role">Barangay Health Worker</div>
+          </div>
+        </div>
+        <button type="button" class="header-logout" onclick="confirmLogout()">Log Out</button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- Stats row + Plot New Household (same row, button on the right) -->
+      <div class="spot-map-top-bar">
+        <div class="spot-map-stats-row">
+          <div class="spot-stat-pill">
+            <span class="spot-stat-value" id="spot-stat-total">60</span>
+            <span class="spot-stat-label">Total HH</span>
+          </div>
+          <div class="spot-stat-pill">
+            <span class="spot-stat-value" id="spot-stat-profiled">53</span>
+            <span class="spot-stat-label">Profiled</span>
+          </div>
+          <div class="spot-stat-pill">
+            <span class="spot-stat-value" id="spot-stat-pending">7</span>
+            <span class="spot-stat-label">Pending</span>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-plot-new-hh" onclick="openPlotHouseholdModal()">Plot New Household</button>
+      </div>
+
+      <!-- Map Container -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🗺️ Barangay La Medalla Spot Map</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <span class="badge badge-green">● Healthy</span>
+            <span class="badge badge-yellow">● Monitor</span>
+            <span class="badge badge-red">● At Risk</span>
+          </div>
+        </div>
+        <div class="map-container map-container--spot" id="spotMapArea" style="min-height:500px;">
+          <!-- Pin click shows household info in panel (same mock data as table below) -->
+          <div class="map-hh-detail map-hh-detail--empty" id="mapHhDetail" aria-live="polite">
+            <button type="button" class="map-hh-detail-close" id="mapHhDetailClose" onclick="clearMapPinSelection()" aria-label="Close details">✕</button>
+            <p class="map-hh-detail-placeholder">Click a colored dot on the map to view household details for that location.</p>
+            <div class="map-hh-detail-filled">
+              <h3 class="map-hh-detail-title" id="mapHhName">—</h3>
+              <p class="map-hh-detail-sub" id="mapHhPurokLine">—</p>
+              <div class="info-row map-hh-detail-status">
+                <span class="label">Status</span>
+                <span class="val" id="mapHhStatusBadge"></span>
+              </div>
+              <div class="info-row"><span class="label">HH No.</span><span class="val" id="mapHhNo">—</span></div>
+              <div class="info-row"><span class="label">Head of family</span><span class="val" id="mapHhHead">—</span></div>
+              <div class="info-row"><span class="label">Zone</span><span class="val" id="mapHhZone">—</span></div>
+              <div class="info-row"><span class="label">Street</span><span class="val" id="mapHhStreet">—</span></div>
+              <div class="info-row"><span class="label">Members</span><span class="val" id="mapHhMembers">—</span></div>
+              <div class="info-row"><span class="label">Last updated</span><span class="val" id="mapHhUpdated">—</span></div>
+            </div>
+          </div>
+
+          <button type="button" class="map-pin green"  style="top:25%; left:20%;" title="Dela Cruz Family"
+            data-hh-no="HH-101" data-name="Dela Cruz Family" data-head="Juan Dela Cruz" data-purok="Purok 1" data-zone="Zone 1" data-street="Rizal St." data-members="5" data-status="Healthy" data-badge="green" data-updated="Today"
+            aria-label="Dela Cruz Family on map"></button>
+          <button type="button" class="map-pin green"  style="top:35%; left:35%;" title="Santos Household"
+            data-hh-no="HH-102" data-name="Santos Household" data-head="Maria Santos" data-purok="Purok 1" data-zone="Zone 1" data-street="Mabini St." data-members="3" data-status="Healthy" data-badge="green" data-updated="Yesterday"
+            aria-label="Santos Household on map"></button>
+          <button type="button" class="map-pin green"  style="top:20%; left:50%;" title="Reyes Family"
+            data-hh-no="HH-103" data-name="Reyes Family" data-head="Pedro Reyes" data-purok="Purok 2" data-zone="Zone 2" data-street="Bonifacio Ave." data-members="6" data-status="Healthy" data-badge="green" data-updated="2 days ago"
+            aria-label="Reyes Family on map"></button>
+          <button type="button" class="map-pin yellow" style="top:55%; left:25%;" title="Garcia Residence"
+            data-hh-no="HH-104" data-name="Garcia Residence" data-head="Ana Garcia" data-purok="Purok 2" data-zone="Zone 2" data-street="Luna St." data-members="4" data-status="Monitor" data-badge="yellow" data-updated="Today"
+            aria-label="Garcia Residence on map"></button>
+          <button type="button" class="map-pin yellow" style="top:40%; left:60%;" title="Bautista Home"
+            data-hh-no="HH-105" data-name="Bautista Home" data-head="Jose Bautista" data-purok="Purok 3" data-zone="Zone 3" data-street="Sagmit St." data-members="7" data-status="Monitor" data-badge="yellow" data-updated="3 days ago"
+            aria-label="Bautista Home on map"></button>
+          <button type="button" class="map-pin red"    style="top:60%; left:55%;" title="Torres Household"
+            data-hh-no="HH-106" data-name="Torres Household" data-head="Lita Torres" data-purok="Purok 5" data-zone="Zone 5" data-street="Katipunan Rd." data-members="4" data-status="At Risk" data-badge="red" data-updated="Today"
+            aria-label="Torres Household on map"></button>
+          <button type="button" class="map-pin green"  style="top:70%; left:45%;" title="Lopez Family"
+            data-hh-no="HH-107" data-name="Lopez Family" data-head="Rosa Lopez" data-purok="Purok 3" data-zone="Zone 3" data-street="E. Aguinaldo St." data-members="4" data-status="Healthy" data-badge="green" data-updated="Yesterday"
+            aria-label="Lopez Family on map"></button>
+          <button type="button" class="map-pin green"  style="top:30%; left:75%;" title="Martinez Family"
+            data-hh-no="HH-108" data-name="Martinez Family" data-head="Carlos Martinez" data-purok="Purok 4" data-zone="Zone 4" data-street="La Medalla Rd." data-members="5" data-status="Healthy" data-badge="green" data-updated="Today"
+            aria-label="Martinez Family on map"></button>
+          <span class="map-placeholder-icon">🗺️</span>
+          <span class="map-placeholder-text">Interactive Map View · Barangay La Medalla · Tap a pin for details</span>
+        </div>
+      </div>
+
+      <!-- Household List -->
+      <div class="card" style="margin-top:20px;">
+        <div class="card-header">
+          <div class="card-title">📍 Mapped Households</div>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Household</th><th>Purok</th><th>Status</th><th>Last Updated</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Dela Cruz Family</td><td>Purok 1</td><td><span class="badge badge-green">Healthy</span></td><td>Today</td></tr>
+            <tr><td>Santos Household</td><td>Purok 1</td><td><span class="badge badge-green">Healthy</span></td><td>Yesterday</td></tr>
+            <tr><td>Reyes Family</td><td>Purok 2</td><td><span class="badge badge-green">Healthy</span></td><td>2 days ago</td></tr>
+            <tr><td>Garcia Residence</td><td>Purok 2</td><td><span class="badge badge-yellow">Monitor</span></td><td>Today</td></tr>
+            <tr><td>Bautista Home</td><td>Purok 3</td><td><span class="badge badge-yellow">Monitor</span></td><td>3 days ago</td></tr>
+            <tr><td>Lopez Family</td><td>Purok 3</td><td><span class="badge badge-green">Healthy</span></td><td>Yesterday</td></tr>
+            <tr><td>Martinez Family</td><td>Purok 4</td><td><span class="badge badge-green">Healthy</span></td><td>Today</td></tr>
+            <tr><td>Torres Household</td><td>Purok 5</td><td><span class="badge badge-red">At Risk</span></td><td>Today</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Plot household — glass modal -->
+<div class="modal-overlay" id="plotHouseholdModal" role="dialog" aria-modal="true" aria-labelledby="plot-hh-title">
+  <div class="modal modal-glass modal-plot-hh">
+    <div class="modal-header">
+      <h2 class="modal-title" id="plot-hh-title">Household record</h2>
+      <p class="modal-desc">Enter the household information for the location you picked on the map.</p>
+      <button type="button" class="modal-close" onclick="closePlotHouseholdModal()" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" for="plot-hh-no">HH No.</label>
+        <input type="text" class="form-control" id="plot-hh-no" placeholder="e.g. HH-102" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="plot-hh-head">Head of the family</label>
+        <input type="text" class="form-control" id="plot-hh-head" placeholder="Full name" autocomplete="name">
+      </div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label class="form-label" for="plot-hh-zone">Zone</label>
+          <input type="text" class="form-control" id="plot-hh-zone" placeholder="e.g. Zone 1">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="plot-hh-street">Street</label>
+          <input type="text" class="form-control" id="plot-hh-street" placeholder="Street / purok">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="plot-water-ladder">Access to safe water — basic safe source</label>
+        <select class="form-control" id="plot-water-ladder">
+          <option value="" disabled selected>Select (I, II, III)</option>
+          <option value="I">I</option>
+          <option value="II">II</option>
+          <option value="III">III</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="plot-safely-managed">Safely managed</label>
+        <select class="form-control" id="plot-safely-managed">
+          <option value="" disabled selected>Yes / No</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="plot-sanitation">Using safely-managed sanitation services</label>
+        <input type="text" class="form-control" id="plot-sanitation" placeholder="Describe service level or facility type">
+      </div>
+    </div>
+    <div class="modal-footer-row">
+      <button type="button" class="btn btn-discard-green" onclick="closePlotHouseholdModal()">Discard</button>
+      <button type="button" class="btn btn-primary" onclick="savePlotHousehold()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script>
+  function openPlotHouseholdModal() {
+    document.getElementById('plotHouseholdModal').classList.add('open');
+  }
+
+  function closePlotHouseholdModal() {
+    document.getElementById('plotHouseholdModal').classList.remove('open');
+  }
+
+  function savePlotHousehold() {
+    showToast('Household plot saved (demo).', 'success');
+    closePlotHouseholdModal();
+  }
+
+  function clearMapPinSelection() {
+    document.querySelectorAll('#spotMapArea .map-pin').forEach(function (p) {
+      p.classList.remove('map-pin--selected');
+    });
+    document.getElementById('mapHhDetail').classList.add('map-hh-detail--empty');
+  }
+
+  function selectMapPin(btn) {
+    var d = btn.dataset;
+    document.querySelectorAll('#spotMapArea .map-pin').forEach(function (p) {
+      p.classList.remove('map-pin--selected');
+    });
+    btn.classList.add('map-pin--selected');
+
+    var panel = document.getElementById('mapHhDetail');
+    panel.classList.remove('map-hh-detail--empty');
+
+    document.getElementById('mapHhName').textContent = d.name || '—';
+    document.getElementById('mapHhPurokLine').textContent = [d.purok, d.street].filter(Boolean).join(' · ');
+    var badge = document.getElementById('mapHhStatusBadge');
+    var b = d.badge || 'green';
+    badge.className = 'badge ' + (b === 'yellow' ? 'badge-yellow' : b === 'red' ? 'badge-red' : 'badge-green');
+    badge.textContent = d.status || '—';
+    document.getElementById('mapHhNo').textContent = d.hhNo || '—';
+    document.getElementById('mapHhHead').textContent = d.head || '—';
+    document.getElementById('mapHhZone').textContent = d.zone || '—';
+    document.getElementById('mapHhStreet').textContent = d.street || '—';
+    document.getElementById('mapHhMembers').textContent = d.members ? d.members + ' members' : '—';
+    document.getElementById('mapHhUpdated').textContent = d.updated || '—';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    updateHeaderUserInfo();
+    document.getElementById('plotHouseholdModal').addEventListener('click', function (e) {
+      if (e.target === this) closePlotHouseholdModal();
+    });
+
+    var mapArea = document.getElementById('spotMapArea');
+    mapArea.querySelectorAll('.map-pin').forEach(function (pin) {
+      pin.addEventListener('click', function (e) {
+        e.stopPropagation();
+        selectMapPin(pin);
+      });
+    });
+    mapArea.addEventListener('click', function (e) {
+      if (e.target.closest('button.map-pin')) return;
+      if (e.target.closest('#mapHhDetail')) return;
+      clearMapPinSelection();
+    });
+  });
+</script>
+</body>
+</html>

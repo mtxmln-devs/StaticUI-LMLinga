@@ -1,0 +1,144 @@
+th<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login – LMLinga</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============================================================
+     LOGIN PAGE
+     ============================================================ -->
+<div class="auth-page">
+
+  <div class="auth-card">
+
+    <!-- Logo Area -->
+    <div class="auth-logo">
+      <div class="logos-row">
+        <img src="img/brgyseal.png" alt="Brgy Seal">
+        <img src="img/logo.png" alt="LMLinga Logo">
+      </div>
+      <h1>LMLinga</h1>
+      <p>Barangay Health Center System<br>La Medalla, Iriga City</p>
+    </div>
+
+    <!-- Welcome Text -->
+    <div style="text-align:center; margin-bottom:24px;">
+      <h2 style="font-size:1.3rem; font-weight:700; color:var(--dark-text);">Welcome Back!</h2>
+      <p style="font-size:0.85rem; color:var(--gray);">Sign in to your account to continue.</p>
+    </div>
+
+    <!-- Login Form -->
+    <form id="loginForm" onsubmit="handleLogin(event)">
+
+      <!-- Full Name -->
+      <div class="form-group">
+        <label class="form-label" for="loginName">Full Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="loginName"
+          placeholder="e.g. Maria Santos"
+          required
+        >
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label class="form-label" for="loginPassword">Password</label>
+        <div style="position:relative;">
+          <input
+            type="password"
+            class="form-control"
+            id="loginPassword"
+            placeholder="Enter your password"
+            required
+            style="padding-right:44px;"
+          >
+          <!-- Toggle password visibility -->
+          <button
+            type="button"
+            onclick="togglePassword('loginPassword', this)"
+            style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:1rem;cursor:pointer;color:var(--gray);"
+          >👁️</button>
+        </div>
+      </div>
+
+      <!-- Role Selector -->
+      <div class="form-group">
+        <label class="form-label" for="loginRole">Login As</label>
+        <select class="form-control" id="loginRole" required>
+          <option value="" disabled selected>Select your role</option>
+          <option value="Resident">Resident</option>
+          <option value="BHW">Barangay Health Worker (BHW)</option>
+          <option value="BNS">Barangay Nutrition Scholar (BNS)</option>
+          <option value="BSPO">Barangay Service Point Officer (BSPO)</option>
+        </select>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary w-full btn-lg" style="margin-top:8px;">
+        🔐 Sign In
+      </button>
+
+    </form>
+
+    <div class="auth-divider"><span>or</span></div>
+
+    <!-- Register Link -->
+    <div class="auth-link">
+      Don't have an account? <a href="register.html">Register here</a>
+    </div>
+
+    <!-- Back to landing -->
+    <div class="auth-link" style="margin-top:10px;">
+      <a href="index.html">← Back to Home</a>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+<script src="js/app.js"></script>
+<script>
+  // Handle login form submission
+  function handleLogin(e) {
+    e.preventDefault();
+    const name = document.getElementById('loginName').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const role = document.getElementById('loginRole').value;
+
+    // Basic validation
+    if (!name || !password || !role) {
+      showToast('Please fill in all fields.', 'error');
+      return;
+    }
+
+    if (password.length < 4) {
+      showToast('Password must be at least 4 characters.', 'error');
+      return;
+    }
+
+    // Save user info to sessionStorage (simulating login)
+    sessionStorage.setItem('userName', name);
+    sessionStorage.setItem('userRole', role);
+    sessionStorage.setItem('loggedIn', 'true');
+
+showToast('Login successful! Redirecting...', 'success');
+
+    // Direct navigation based on role
+    if (role === 'Resident') {
+      window.location.href = 'chatbot.html';
+    } else {
+      window.location.href = 'dashboard.html';
+    }
+  }
+</script>
+</body>
+</html>

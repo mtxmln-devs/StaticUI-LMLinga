@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LMLinga – Barangay Health Center System</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .portal-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--bg) 0%, var(--highlight) 100%);
+      padding: 40px 20px;
+    }
+    .portal-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .portal-header img {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 16px;
+    }
+    .portal-header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--dark-text);
+      margin-bottom: 8px;
+    }
+    .portal-header p {
+      color: var(--gray-dark);
+      font-size: 1rem;
+    }
+    .portal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      max-width: 800px;
+      width: 100%;
+    }
+    .portal-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 40px 32px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .portal-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary);
+    }
+    .portal-icon {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+    }
+    .portal-card h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--dark-text);
+      margin-bottom: 12px;
+    }
+    .portal-card p {
+      font-size: 0.9rem;
+      color: var(--gray-dark);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .portal-btn {
+      display: inline-block;
+      padding: 12px 32px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+    .portal-btn-resident {
+      background: var(--primary);
+      color: white;
+    }
+    .portal-btn-resident:hover {
+      background: var(--secondary);
+    }
+    .portal-btn-staff {
+      background: var(--dark-text);
+      color: white;
+    }
+    .portal-btn-staff:hover {
+      background: var(--green-deep);
+    }
+    @media (max-width: 640px) {
+      .portal-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="portal-page">
+
+  <div class="portal-header">
+    <div style="display:flex;justify-content:center;gap:16px;margin-bottom:16px;">
+      <img src="img/brgyseal.png" alt="Brgy Seal">
+      <img src="img/logo.png" alt="LMLinga Logo">
+    </div>
+    <h1>LMLinga</h1>
+    <p>Barangay Health Center System · La Medalla, Iriga City</p>
+  </div>
+
+  <div class="portal-grid">
+
+    <!-- Resident Portal -->
+    <div class="portal-card" onclick="window.location.href='resident-landing.html'">
+      <div class="portal-icon">🏠</div>
+      <h2>Resident</h2>
+      <p>Access the AI Health Chatbot and view your household health records. For residents of Barangay La Medalla.</p>
+      <span class="portal-btn portal-btn-resident">Enter as Resident →</span>
+    </div>
+
+    <!-- Health Worker Portal -->
+    <div class="portal-card" onclick="window.location.href='staff-landing.html'">
+      <div class="portal-icon">🩺</div>
+      <h2>Health Worker</h2>
+      <p>Full system access for BHW, BNS, and BSPO. Manage household profiling, health records, and spot mapping.</p>
+      <span class="portal-btn portal-btn-staff">Enter as Health Worker →</span>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

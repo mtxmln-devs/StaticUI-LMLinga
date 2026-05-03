@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resident Records – LMLinga</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/app.js"></script>
+  <script>protectResidentOnlyPage();</script>
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ---- SIDEBAR ---- -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <img src="img/logo.png" alt="LMLinga" onerror="this.style.display='none'">
+      <div class="sidebar-logo-text">
+        <span class="brand">LMLinga</span>
+        <span class="sub">Health Center</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Main Menu</div>
+      <div id="sidebar-nav"></div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="confirmLogout()"><span>🚪</span>Logout</button>
+    </div>
+  </aside>
+
+  <!-- ---- MAIN CONTENT ---- -->
+  <div class="main-content">
+
+    <header class="header">
+      <div class="header-left">
+        <button class="map-btn" onclick="toggleSidebar()">☰</button>
+        <div>
+          <div class="page-title">Household records</div>
+          <div class="page-subtitle">View your household information</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="search-box">
+          <span>🔍</span>
+          <input type="search" placeholder="Search..." autocomplete="off">
+        </div>
+        <div class="header-actions">
+          <button type="button" class="header-icon-btn" title="Notifications">🔔</button>
+        </div>
+        <div class="d-flex align-center gap-2">
+          <div class="user-avatar" id="user-initial">?</div>
+          <div class="user-info">
+            <div class="user-name" id="user-display-name">User</div>
+            <div class="user-role" id="user-display-role">Role</div>
+          </div>
+        </div>
+        <button type="button" class="header-logout" onclick="confirmLogout()">Log Out</button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- ---- RESIDENT RECORDS CONTENT ---- -->
+      <div class="card">
+        <div class="card-header">
+          <h2>🏡 Household records</h2>
+        </div>
+        <div class="card-body">
+          <p>Your household records (resident view).</p>
+          
+          <!-- Search/Filter -->
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search residents by name or ID...">
+          </div>
+          
+          <!-- Records Table Placeholder -->
+          <div style="margin-top: 20px; padding: 20px; text-align: center; color: var(--gray);">
+            <p>📋 Resident records will be displayed here.</p>
+            <p>Use the search function above to find residents.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    renderRoleBasedSidebar();
+    updateHeaderUserInfo();
+  });
+</script>
+</body>
+</html>

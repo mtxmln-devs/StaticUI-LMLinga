@@ -1,0 +1,47 @@
+<!-- ============================================================
+     HEADER COMPONENT
+     Include this in every system page (inside .main-content)
+     Replace PAGE_TITLE and PAGE_SUBTITLE as needed
+     ============================================================ -->
+<header class="header" id="main-header">
+
+  <!-- Left: Hamburger + Page Title -->
+  <div class="header-left">
+
+    <!-- Mobile menu toggle -->
+    <button class="map-btn" id="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+      ☰
+    </button>
+
+    <div>
+      <div class="page-title" id="header-title">Dashboard</div>
+      <div class="page-subtitle" id="header-subtitle">Welcome back, BHW!</div>
+    </div>
+  </div>
+
+  <!-- Right: Search + User -->
+  <div class="header-right">
+
+    <!-- Search Box -->
+    <div class="search-box">
+      <span>🔍</span>
+      <input type="text" placeholder="Search records..." id="global-search">
+    </div>
+
+    <!-- Notification Bell -->
+    <button class="map-btn" title="Notifications" style="position:relative;">
+      🔔
+      <span style="position:absolute;top:4px;right:4px;width:8px;height:8px;background:var(--primary);border-radius:50%;border:2px solid white;"></span>
+    </button>
+
+    <!-- User Info -->
+    <div class="d-flex align-center gap-2" style="cursor:pointer;">
+      <div class="user-avatar" id="user-initial">B</div>
+      <div class="user-info">
+        <div class="user-name" id="user-display-name">BHW User</div>
+        <div class="user-role" id="user-display-role">Barangay Health Worker</div>
+      </div>
+    </div>
+
+  </div>
+</header>
